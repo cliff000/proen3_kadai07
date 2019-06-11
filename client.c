@@ -55,5 +55,78 @@ int main(int argc, char *argv[])
 
     close(socket_fd);
 
+
+
+
+    pthread_t th1,th2;
+    void *rval;
+
+    srand((unsigned int)time(NULL));
+
+    //スレッドth1を生成し、recvText("th1")を呼び出す
+    if(pthread_create(&th1, NULL, recvText, (void*)"th1") != 0){
+        perror("Thread creation failed.\n");
+        exit(EXIT_FLURE);
+    }
+
+    //スレッドth2を生成し、sendText("th2")を呼び出す
+    if(pthread_create(&th2, NULL, sendText, (void*)"th2") != 0){
+        perror("Thread creation failed.\n");
+        exit(EXIT_FLURE);
+    }
+
+
+    //スレッドth1の終了を待つ
+    printf("the process joins with thread th1\n");
+    if(pthread_join(th1, &rval) != 0){
+        perror("Failed to join with th1.\n");
+    }else{
+        printf("finished th1 (thread ID = %p)\n", (void*)*(pthread_t*)rval);
+        free(rval);
+    }
+
+    //スレッドth2の終了を待つ
+    printf("the process joins with thread th1\n");
+    if(pthread_join(th2, &rval) != 0){
+        perror("Failed to join with th1.\n");
+    }else{
+        printf("finished th2 (thread ID = %p)\n", (void*)*(pthread_t*)rval);
+        free(rval);
+    }
+
+
     return 0;
-} 
+}
+
+    
+
+void recvText(void *arg){
+    char buffer[BUFSIZE]; //メッセージを格納するバッファ
+    
+    while (1) {
+        // 送信データを読み込む
+        memset(buffer, '\0', BUFSIZE);
+        // データ受信
+        recv(socket, buffer, BUFSIZE,0);
+        printf("from server: %s\n", buffer);
+        if (strcmp(buffer, "quit") == 0)
+            break;
+    }
+}
+
+void sendText(void *arg){
+    char buffer[BUFSIZE]; //メッセージを格納するバッファ
+
+    while (1) {
+        // 送信データを読み込む
+        memset(buffer, '\0', BUFSIZE);
+        printf(">");
+        if (fgets(buffer, BUFSIZE, stdin) == NULL)
+            strcpy(buffer, "quit");
+        chop(buffer);
+        //データ送信
+        send(socket, buffer, BUFSIZE,0);
+        if (strcmp(buffer, "quit") == 0)
+            break;
+    }
+}
