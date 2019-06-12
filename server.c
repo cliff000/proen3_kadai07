@@ -154,6 +154,8 @@ void *recvText(void *arg){
         if(exitFlag)
             break;
     }
+
+    printf("server recv finished\n");
 }
 
 void *sendText(void *arg){
@@ -174,4 +176,10 @@ void *sendText(void *arg){
         if(exitFlag)
             break;
     }
+<<<<<<< HEAD
 }
+=======
+
+    printf("server send finished\n");
+}
+>>>>>>> 4e0a07a6c2fd09876695d092435f8c01f3c5109f
