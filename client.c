@@ -22,9 +22,11 @@ void chop(char *str)
 }
 
 
+
+int socket_fd; // socket() の返すファイル識別子
+
 int main(int argc, char *argv[])
 {
-    int socket_fd; // socket() の返すファイル識別子
     struct sockaddr_in server; //サーバプロセスのソケットアドレス情報
     struct hostent *hp; //ホスト情報
     uint16_t port; //ポート番号
@@ -50,13 +52,21 @@ int main(int argc, char *argv[])
     server.sin_family = PF_INET; //プロトコルファミリの設定
     server.sin_port = htons(port); //ポート番号の設定
 
-    // argv[1] のマシンのIPアドレスを返す
+    /// argv[1] のマシンのIPアドレスを返す
     if ((hp = gethostbyname(argv[1])) == NULL) {
         perror("client: gethostbyname");
         exit(EXIT_FAILURE);
     }
 
-    close(socket_fd);
+    // IPアドレスの設定
+    memcpy(&server.sin_addr, hp->h_addr_list[0], hp->h_length);
+
+    //サーバに接続．サーバが起動し，bind(), listen() している必要あり
+    if (connect(socket_fd, (struct sockaddr *) &server, sizeof(server)) == -1) {
+        perror("client: connect");
+        exit(EXIT_FAILURE);
+    }
+
 
 
 
@@ -111,7 +121,7 @@ void *recvText(void *arg){
         // 送信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         // データ受信
-        recv(socket, buffer, BUFSIZE,0);
+        recv(socket_fd, buffer, BUFSIZE,0);
         printf("from server: %s\n", buffer);
         if (strcmp(buffer, "quit") == 0)
             break;
@@ -129,7 +139,7 @@ void *sendText(void *arg){
             strcpy(buffer, "quit");
         chop(buffer);
         //データ送信
-        send(socket, buffer, BUFSIZE,0);
+        send(socket_fd, buffer, BUFSIZE,0);
         if (strcmp(buffer, "quit") == 0)
             break;
     }

@@ -10,7 +10,6 @@
 #include <time.h>
 #include <pthread.h>
 
-int connected_socket; // accept()が返すファイル識別子
 void *recvText(void *arg);
 void *sendText(void *arg);
 
@@ -21,6 +20,8 @@ void chop(char *str)
         *p = '\0';
 }
 
+
+int connected_socket; // accept()が返すファイル識別子
 
 int main(int argc, char *argv[])
 {
@@ -144,7 +145,7 @@ void *recvText(void *arg){
         // 送信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         // データ受信
-        recv(socket, buffer, BUFSIZE,0);
+        recv(connected_socket, buffer, BUFSIZE,0);
         printf("from client: %s\n", buffer);
         if (strcmp(buffer, "quit") == 0)
             break;
@@ -162,7 +163,7 @@ void *sendText(void *arg){
             strcpy(buffer, "quit");
         chop(buffer);
         //データ送信
-        send(socket, buffer, BUFSIZE,0);
+        send(connected_socket, buffer, BUFSIZE,0);
         if (strcmp(buffer, "quit") == 0)
             break;
     }
