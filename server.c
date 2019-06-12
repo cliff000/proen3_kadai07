@@ -22,6 +22,7 @@ void chop(char *str)
 
 
 int connected_socket; // accept()が返すファイル識別子
+int exitFlag = 0; //終了フラグ
 
 int main(int argc, char *argv[])
 {
@@ -125,9 +126,9 @@ int main(int argc, char *argv[])
     }
 
     //スレッドth2の終了を待つ
-    printf("the process joins with thread th1\n");
+    printf("the process joins with thread th2\n");
     if(pthread_join(th2, &rval) != 0){
-        perror("Failed to join with th1.\n");
+        perror("Failed to join with th2.\n");
     }else{
         printf("finished th2 (thread ID = %p)\n", (void*)*(pthread_t*)rval);
         free(rval);
@@ -148,6 +149,9 @@ void *recvText(void *arg){
         recv(connected_socket, buffer, BUFSIZE,0);
         printf("from client: %s\n", buffer);
         if (strcmp(buffer, "quit") == 0)
+            exitFlag = 1;
+
+        if(exitFlag)
             break;
     }
 }
@@ -165,6 +169,9 @@ void *sendText(void *arg){
         //データ送信
         send(connected_socket, buffer, BUFSIZE,0);
         if (strcmp(buffer, "quit") == 0)
+            exitFlag = 1;
+
+        if(exitFlag)
             break;
     }
 }
