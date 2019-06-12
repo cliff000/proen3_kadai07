@@ -130,6 +130,8 @@ void *recvText(void *arg){
         if(exitFlag)
             break;
     }
+
+    printf("client recv finished\n");
 }
 
 void *sendText(void *arg){
@@ -150,4 +152,6 @@ void *sendText(void *arg){
         if(exitFlag)
             break;
     }
+
+    printf("client send finished\n");
 }
