@@ -132,6 +132,7 @@ void *recvText(void *arg){
     }
 
     printf("client recv finished\n");
+    pthread_exit(3);
 }
 
 void *sendText(void *arg){
@@ -141,7 +142,7 @@ void *sendText(void *arg){
         // 送信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         printf(">");
-        if (fgets(buffer, BUFSIZE, stdin) == NULL && exitFlag)
+        if (fgets(buffer, BUFSIZE, stdin) == NULL)
             strcpy(buffer, "quit");
         chop(buffer);
         //データ送信
@@ -154,4 +155,5 @@ void *sendText(void *arg){
     }
 
     printf("client send finished\n");
+    pthread_exit(3);
 }
