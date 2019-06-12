@@ -124,7 +124,6 @@ void *recvText(void *arg){
         // データ受信
         recv(socket_fd, buffer, BUFSIZE,0);
         printf("from server: %s\n", buffer);
-        printf()
         if (strcmp(buffer, "quit") == 0)
             exitFlag = 1;
 
