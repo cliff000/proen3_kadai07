@@ -141,6 +141,9 @@ int main(int argc, char *argv[])
 
 void *recvText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
+
+    pthread_t *thread_id = (pthread_t *) malloc(sizeof(pthread_t));
+    *thread_id = pthread_self(); // 自分のスレッド番号を得る
     
     while (1) {
         // 受信データを読み込む
@@ -161,6 +164,9 @@ void *recvText(void *arg){
 
 void *sendText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
+
+    pthread_t *thread_id = (pthread_t *) malloc(sizeof(pthread_t));
+    *thread_id = pthread_self(); // 自分のスレッド番号を得る
 
     while (1) {
         // 送信データを読み込む
