@@ -132,7 +132,7 @@ void *recvText(void *arg){
     }
 
     printf("client recv finished\n");
-    pthread_exit(3);
+    pthread_exit((void *) thread_id);
 }
 
 void *sendText(void *arg){
@@ -155,5 +155,5 @@ void *sendText(void *arg){
     }
 
     printf("client send finished\n");
-    pthread_exit(3);
+    pthread_exit((void *) thread_id);
 }
