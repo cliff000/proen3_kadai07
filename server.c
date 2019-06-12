@@ -101,13 +101,13 @@ int main(int argc, char *argv[])
     srand((unsigned int)time(NULL));
 
     //スレッドth1を生成し、recvText("th1")を呼び出す
-    if(pthread_create(&th1, NULL, recvText, (void*)"th1") != 0){
+    if(pthread_create(&th1, NULL, recvText, (void *) "th1") != 0){
         perror("Thread creation failed.\n");
         exit(EXIT_FLURE);
     }
 
     //スレッドth2を生成し、sendText("th2")を呼び出す
-    if(pthread_create(&th2, NULL, sendText, (void*)"th2") != 0){
+    if(pthread_create(&th2, NULL, sendText, (void *) "th2") != 0){
         perror("Thread creation failed.\n");
         exit(EXIT_FLURE);
     }
