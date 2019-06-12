@@ -6,7 +6,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#define EXIT_FAILURE 1
 #define BUFSIZE  256
 #include <time.h>
 #include <pthread.h>
@@ -105,13 +104,13 @@ int main(int argc, char *argv[])
     //スレッドth1を生成し、recvText("th1")を呼び出す
     if(pthread_create(&th1, NULL, recvText, (void*)"th1") != 0){
         perror("Thread creation failed.\n");
-        exit(EXIT_FLURE);
+        exit(EXIT_FAILURE);
     }
 
     //スレッドth2を生成し、sendText("th2")を呼び出す
     if(pthread_create(&th2, NULL, sendText, (void*)"th2") != 0){
         perror("Thread creation failed.\n");
-        exit(EXIT_FLURE);
+        exit(EXIT_FAILURE);
     }
 
 

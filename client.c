@@ -7,7 +7,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#define EXIT_FAILURE 1
 #define BUFSIZE  256
 #include <time.h>
 #include <pthread.h>
