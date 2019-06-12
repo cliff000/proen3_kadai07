@@ -143,7 +143,7 @@ void *recvText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
     
     while (1) {
-        // 送信データを読み込む
+        // 受信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         // データ受信
         recv(connected_socket, buffer, BUFSIZE,0);
@@ -163,7 +163,7 @@ void *sendText(void *arg){
         // 送信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         printf(">");
-        if (fgets(buffer, BUFSIZE, stdin) == NULL)
+        if (fgets(buffer, BUFSIZE, stdin) == NULL && exitFlag)
             strcpy(buffer, "quit");
         chop(buffer);
         //データ送信
