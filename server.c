@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <cstdlib>
 #define BUFSIZE  256
 #include <time.h>
 #include <pthread.h>
