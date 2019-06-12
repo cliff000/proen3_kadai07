@@ -11,8 +11,8 @@
 #include <pthread.h>
 
 int connected_socket; // accept()が返すファイル識別子
-void recvText(void *arg);
-void sendText(void *arg);
+void *recvText(void *arg);
+void *sendText(void *arg);
 
 void chop(char *str)
 {
@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
 
 
 
+    // スレッド作成
     pthread_t th1,th2;
     void *rval;
 
@@ -136,7 +137,7 @@ int main(int argc, char *argv[])
 
 
 
-void recvText(void *arg){
+void *recvText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
     socket = (int)
     while (1) {
@@ -150,7 +151,7 @@ void recvText(void *arg){
     }
 }
 
-void sendText(void *arg){
+void *sendText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
 
     while (1) {

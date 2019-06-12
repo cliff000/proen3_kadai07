@@ -7,9 +7,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include "kadai_method.h"
-
 #define BUFSIZE  256
+#include <time.h>
+#include <pthread.h>
+
+void *recvText(void *arg);
+void *sendText(void *arg);
 
 void chop(char *str)
 {
@@ -58,6 +61,7 @@ int main(int argc, char *argv[])
 
 
 
+    // スレッド作成
     pthread_t th1,th2;
     void *rval;
 
@@ -100,7 +104,7 @@ int main(int argc, char *argv[])
 
     
 
-void recvText(void *arg){
+void *recvText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
     
     while (1) {
@@ -114,7 +118,7 @@ void recvText(void *arg){
     }
 }
 
-void sendText(void *arg){
+void *sendText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
 
     while (1) {
