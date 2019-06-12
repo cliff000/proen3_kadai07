@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 
 void *recvText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
-    socket = (int)
+    
     while (1) {
         // 送信データを読み込む
         memset(buffer, '\0', BUFSIZE);
