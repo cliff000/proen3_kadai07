@@ -92,20 +92,18 @@ int main(int argc, char *argv[])
 
 
     //スレッドth1の終了を待つ
-    printf("the process joins with thread th1\n");
     if(pthread_join(th1, &rval) != 0){
-        perror("Failed to join with th1.\n");
+        perror("Failed to join with recv.\n");
     }else{
-        printf("finished th1 (thread ID = %p)\n", (void*)*(pthread_t*)rval);
+        printf("finished recv (thread ID = %p)\n", (void*)*(pthread_t*)rval);
         free(rval);
     }
 
     //スレッドth2の終了を待つ
-    printf("the process joins with thread th2\n");
     if(pthread_join(th2, &rval) != 0){
-        perror("Failed to join with th2.\n");
+        perror("Failed to join with send.\n");
     }else{
-        printf("finished th2 (thread ID = %p)\n", (void*)*(pthread_t*)rval);
+        printf("finished send (thread ID = %p)\n", (void*)*(pthread_t*)rval);
         free(rval);
     }
 
@@ -117,31 +115,45 @@ int main(int argc, char *argv[])
 
 void *recvText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
+
+    pthread_t *thread_id = (pthread_t *) malloc(sizeof(pthread_t));
+    *thread_id = pthread_self(); // 自分のスレッド番号を得る
+
     
     while (1) {
         // 受信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         // データ受信
         recv(socket_fd, buffer, BUFSIZE,0);
-        printf("from server: %s\n", buffer);
-        if (strcmp(buffer, "quit") == 0)
-            exitFlag = 1;
+        printf("\nfrom server: %s\n", buffer);
+        printf(">");
+        fflush(stdout);
+        if (strcmp(buffer, "quit") == 0){
+            if(exitFlag == 0){
+                exitFlag = 1;
+                send(socket_fd, "quit", BUFSIZE,0);
+            }
+        }
 
         if(exitFlag)
             break;
     }
 
-    printf("client recv finished\n");
+    pthread_exit((void *) thread_id);
 }
 
 void *sendText(void *arg){
     char buffer[BUFSIZE]; //メッセージを格納するバッファ
 
+    pthread_t *thread_id = (pthread_t *) malloc(sizeof(pthread_t));
+    *thread_id = pthread_self(); // 自分のスレッド番号を得る
+
+
     while (1) {
         // 送信データを読み込む
         memset(buffer, '\0', BUFSIZE);
         printf(">");
-        if (fgets(buffer, BUFSIZE, stdin) == NULL && exitFlag)
+        if (fgets(buffer, BUFSIZE, stdin) == NULL || exitFlag)
             strcpy(buffer, "quit");
         chop(buffer);
         //データ送信
@@ -153,5 +165,5 @@ void *sendText(void *arg){
             break;
     }
 
-    printf("client send finished\n");
+    pthread_exit((void *) thread_id);
 }
